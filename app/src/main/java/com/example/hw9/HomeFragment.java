@@ -150,8 +150,8 @@ public class HomeFragment extends Fragment {
         String url = "http://10.0.2.2:8080/homeContent";
 
         ArrayList<SliderData> currently_playing_movies = new ArrayList<>();
-        ArrayList<String> top_rated_movies = new ArrayList<>();
-        ArrayList<String> popular_movies = new ArrayList<>();
+        ArrayList<MovieData> top_rated_movies = new ArrayList<>();
+        ArrayList<MovieData> popular_movies = new ArrayList<>();
 
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
@@ -166,7 +166,6 @@ public class HomeFragment extends Fragment {
                                 JSONObject movie = jsonArray.getJSONObject(i);
 
                                 String url = movie.getString("poster_path");
-
                                 currently_playing_movies.add(new SliderData(url));
                             }
 
@@ -174,7 +173,10 @@ public class HomeFragment extends Fragment {
                             for(int i = 0; i < json_top_rated_mov.length() ; i++){
                                 JSONObject movie = json_top_rated_mov.getJSONObject(i);
                                 String url = movie.getString("poster_path");
-                                top_rated_movies.add(url);
+                                String id = movie.getString("id");
+                                String media_type = "movie";
+
+                                top_rated_movies.add(new MovieData(url,id,media_type));
                             }
                             callTopRated(top_rated_movies);
 
@@ -182,7 +184,9 @@ public class HomeFragment extends Fragment {
                             for(int i = 0; i < json_popular_mov.length() ; i++){
                                 JSONObject movie = json_popular_mov.getJSONObject(i);
                                 String url = movie.getString("poster_path");
-                                popular_movies.add(url);
+                                String id = movie.getString("id");
+                                String media_type = "movie";
+                                popular_movies.add(new MovieData(url,id,media_type));
                             }
                             callPopular(popular_movies);
                         } catch (JSONException e) {
