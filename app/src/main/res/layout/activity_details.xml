@@ -33,8 +33,9 @@
             android:layout_marginEnd="4dp"
             android:layout_marginRight="4dp"
             android:text="Title"
-            android:textColor="@color/colorPrimary"
-            android:textSize="20dp"
+            android:textColor="@color/white"
+            android:textSize="30dp"
+            android:background="@color/colorPrimary"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -155,6 +156,7 @@
             app:layout_constraintTop_toBottomOf="@+id/simpleGridView" />
 
         <LinearLayout
+            android:id="@+id/recycleLinearLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
@@ -173,6 +175,36 @@
             app:layout_constraintTop_toBottomOf="@+id/reviewHeading">
         </androidx.recyclerview.widget.RecyclerView>
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/recommdHeading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Recommended Picks"
+            android:textColor="@color/colorPrimary"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recycleLinearLayout" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recommendedPicks"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recommdHeading" />
+
+
+
+
 
 
 

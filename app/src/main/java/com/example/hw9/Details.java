@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.Movie;
 import android.os.Bundle;
 import android.widget.GridView;
 import android.widget.TextView;
@@ -41,10 +42,21 @@ public class Details extends AppCompatActivity {
         });
     }
 
+    private void callRecommeded(ArrayList top_rated_movies){
+        //Top-Rated
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.HORIZONTAL,false);
+        RecyclerView recyclerView = findViewById(R.id.recommendedPicks);
+        recyclerView.setLayoutManager(layoutManager);
+        RecyclerViewAdapter adapter1 = new RecyclerViewAdapter(getApplicationContext(),top_rated_movies);
+        recyclerView.setAdapter(adapter1);
+
+    }
+
 
     GridView simpleList;
     ArrayList<Cast> castList=new ArrayList<>();
     ArrayList<Review> reviewList = new ArrayList<>();
+    ArrayList<MovieData> recommendedList = new ArrayList<>();
     RecyclerView reviewView;
 
     @Override
@@ -87,6 +99,7 @@ public class Details extends AppCompatActivity {
                             String year = response.getString("year");
                             JSONArray cast_arr = response.getJSONArray("movie_cast");
                             JSONArray rev_arr = response.getJSONArray("movie_rev");
+                            JSONArray recommended_arr = response.getJSONArray("recommended_mov");
 
                             //Setting Youtube
                             setYoutube(trailer);
@@ -134,6 +147,19 @@ public class Details extends AppCompatActivity {
                             reviewView.setLayoutManager(layoutManager);
                             reviewView.setAdapter(rAdapter);
                             reviewView.setNestedScrollingEnabled(false);
+
+
+                            //Setting Recommended Picks
+                            for(int i = 0; i < recommended_arr.length() ; i++){
+                                JSONObject movie = recommended_arr.getJSONObject(i);
+                                String url = movie.getString("poster_path");
+                                String id = movie.getString("id");
+                                String media_type = "movie";
+                                recommendedList.add(new MovieData(url,id,media_type));
+                            }
+
+                            callRecommeded(recommendedList);
+
 
 
                         } catch (Exception e) {
