@@ -17,7 +17,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.MyViewHold
     Context context;
 
 
-    public ReviewAdapter(Context context, ArrayList reviewList){
+    public ReviewAdapter(Context context, ArrayList<Review> reviewList){
         this.reviewList = reviewList;
         this.context = context;
     }
@@ -36,7 +36,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.MyViewHold
 
     @NonNull
     @Override
-    public ReviewAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(R.layout.review_layout,parent,false);
         return new MyViewHolder(view);
@@ -46,7 +46,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.MyViewHold
     public void onBindViewHolder(@NonNull ReviewAdapter.MyViewHolder holder, int position) {
         holder.reviewBy.setText(reviewList.get(position).getReviewName());
         holder.rating.setText(reviewList.get(position).getRating());
-//        holder.content.setText(reviewList.get(position).getContent());
+        holder.content.setText(reviewList.get(position).getContent());
 
     }
 

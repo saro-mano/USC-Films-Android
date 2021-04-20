@@ -128,12 +128,12 @@ public class Details extends AppCompatActivity {
                                 System.out.println(content);
                             }
 
-//                            reviewView = (RecyclerView) findViewById(R.id.reviewRecycle);
-//                            ReviewAdapter rAdapter = new ReviewAdapter(getApplicationContext(),reviewList);
-//                            LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.VERTICAL,false);
-//                            reviewView.setLayoutManager(layoutManager);
-//                            reviewView.setAdapter(rAdapter);
-//                            reviewView.setNestedScrollingEnabled(false);
+                            reviewView = (RecyclerView) findViewById(R.id.reviewRecycle);
+                            ReviewAdapter rAdapter = new ReviewAdapter(getApplicationContext(),reviewList);
+                            LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.VERTICAL,false);
+                            reviewView.setLayoutManager(layoutManager);
+                            reviewView.setAdapter(rAdapter);
+                            reviewView.setNestedScrollingEnabled(false);
 
 
                         } catch (Exception e) {

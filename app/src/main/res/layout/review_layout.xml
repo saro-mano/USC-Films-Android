@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="5dp"
     >
 
     <androidx.cardview.widget.CardView
@@ -13,13 +14,20 @@
         app:cardBackgroundColor="@color/theme"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:divider="@android:color/black"
+        android:dividerHeight="0.0px"
+        app:cardCornerRadius="15dp"
+        android:layout_margin="10dp"
+        >
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
             tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="-155dp">
+            tools:layout_editor_absoluteY="-155dp"
+            >
 
 
             <TextView
@@ -28,7 +36,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="review by"
-                android:textColor="@color/white"
+                android:textColor="@color/colorPrimary"
+
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.045"
                 app:layout_constraintStart_toStartOf="parent"
@@ -50,13 +60,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
+                android:paddingLeft="10dp"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:scrollHorizontally="true"
                 android:text="content"
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.043"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/rating" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     </androidx.cardview.widget.CardView>
 
