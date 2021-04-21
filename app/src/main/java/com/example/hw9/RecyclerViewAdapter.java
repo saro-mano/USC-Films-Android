@@ -1,9 +1,12 @@
 package com.example.hw9;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -23,6 +26,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private ArrayList<String> id = new ArrayList<>();
     private ArrayList<String> media_type = new ArrayList<>();
     private Context context;
+    Toast toast;
 
     public RecyclerViewAdapter(Context context ,ArrayList<MovieData> data) {
         for(int i = 0; i < data.size() ; i++){
@@ -54,30 +58,66 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         holder.popUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
                 //creating a popup menu
                 PopupMenu popup = new PopupMenu(context,holder.popUpButton);
                 //inflating menu from xml resource
                 popup.inflate(R.menu.poster_options);
                 //adding click listener
-//                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-//                    @Override
-//                    public boolean onMenuItemClick(MenuItem item) {
-//                        switch (item.getItemId()) {
-//                            case R.id.menu1:
-//                                //handle menu1 click
-//                                return true;
-//                            case R.id.menu2:
-//                                //handle menu2 click
-//                                return true;
-//                            case R.id.menu3:
-//                                //handle menu3 click
-//                                return true;
-//                            default:
-//                                return false;
-//                        }
-//                    }
-//                });
+                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.tmdb:
+                                String url = "https://www.themoviedb.org/" + media_type.get(position) + "/" + id.get(position);
+                                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                i.setPackage("com.android.chrome");
+                                try {
+                                    context.startActivity(i);
+                                } catch (ActivityNotFoundException e) {
+                                    toast.makeText(context, "unable to open chrome", Toast.LENGTH_SHORT).show();
+                                    i.setPackage(null);
+                                    context.startActivity(i);
+                                }
+                                return true;
+                            case R.id.fbShare:
+                                url = "https://www.themoviedb.org/" + media_type.get(position) + "/" + id.get(position);
+                                String fbURL = "https://www.facebook.com/sharer/sharer.php?u=" + url ;
+                                i = new Intent(Intent.ACTION_VIEW, Uri.parse(fbURL));
+                                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                i.setPackage("com.android.chrome");
+                                try {
+                                    context.startActivity(i);
+                                } catch (ActivityNotFoundException e) {
+                                    toast.makeText(context, "unable to open chrome", Toast.LENGTH_SHORT).show();
+                                    i.setPackage(null);
+                                    context.startActivity(i);
+                                }
+                                return true;
+
+                                //handle menu2 click
+                            case R.id.twitterShare:
+                                url = "https://www.themoviedb.org/" + media_type.get(position) + "/" + id.get(position);
+                                String tweetUrl = "https://twitter.com/intent/tweet?text=Check this out! " + url;
+                                //handle menu3 click
+                                i = new Intent(Intent.ACTION_VIEW, Uri.parse(tweetUrl));
+                                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                i.setPackage("com.android.chrome");
+                                try {
+                                    context.startActivity(i);
+                                } catch (ActivityNotFoundException e) {
+                                    toast.makeText(context, "unable to open chrome", Toast.LENGTH_SHORT).show();
+                                    i.setPackage(null);
+                                    context.startActivity(i);
+                                }
+                                return true;
+                            case R.id.watchlist:
+                                return true;
+                            default:
+                                return false;
+                        }
+                    }
+                });
                 //displaying the popup
                 popup.show();
 
@@ -94,6 +134,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     bundle.putString("id", id.get(position));
                     bundle.putString("media_type",media_type.get(position));
                     intent.putExtras(bundle);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
 //                    Toast.makeText(context,"Your answer is correct!" , Toast.LENGTH_LONG ).show();
                 }

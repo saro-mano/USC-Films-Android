@@ -1,5 +1,8 @@
 package com.example.hw9;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -14,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -81,6 +85,8 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
 
     }
 
@@ -152,6 +158,8 @@ public class HomeFragment extends Fragment {
         ArrayList<SliderData> currently_playing_movies = new ArrayList<>();
         ArrayList<MovieData> top_rated_movies = new ArrayList<>();
         ArrayList<MovieData> popular_movies = new ArrayList<>();
+        ArrayList<MovieData> popular_tv = new ArrayList<>();
+        ArrayList<MovieData> top_rated_tv = new ArrayList<>();
 
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
@@ -162,6 +170,9 @@ public class HomeFragment extends Fragment {
                             JSONArray jsonArray = response.getJSONArray("currently_playing");
                             JSONArray json_top_rated_mov = response.getJSONArray("top_rated_movies");
                             JSONArray json_popular_mov = response.getJSONArray("popular_movies");
+                            JSONArray json_popular_tv = response.getJSONArray("popular_tv");
+                            JSONArray json_top_rated_tv = response.getJSONArray("top_rated_tv");
+
                             for (int i = 0 ; i < jsonArray.length() ; i++){
                                 JSONObject movie = jsonArray.getJSONObject(i);
 
@@ -175,6 +186,7 @@ public class HomeFragment extends Fragment {
                                 String url = movie.getString("poster_path");
                                 String id = movie.getString("id");
                                 String media_type = "movie";
+                                System.out.println("Movie URL:"+ url);
 
                                 top_rated_movies.add(new MovieData(url,id,media_type));
                             }
@@ -189,6 +201,23 @@ public class HomeFragment extends Fragment {
                                 popular_movies.add(new MovieData(url,id,media_type));
                             }
                             callPopular(popular_movies);
+
+                            for(int i = 0; i < json_popular_tv.length() ; i++){
+                                JSONObject movie = json_popular_tv.getJSONObject(i);
+                                String url = movie.getString("poster_path");
+                                String id = movie.getString("id");
+                                String media_type = "tv";
+                                popular_tv.add(new MovieData(url,id,media_type));
+                            }
+
+                            for(int i = 0; i < json_top_rated_tv.length() ; i++){
+                                JSONObject movie = json_top_rated_tv.getJSONObject(i);
+                                String url = movie.getString("poster_path");
+                                String id = movie.getString("id");
+                                String media_type = "tv";
+                                top_rated_tv.add(new MovieData(url,id,media_type));
+                            }
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -202,6 +231,49 @@ public class HomeFragment extends Fragment {
 
         // Add the request to the RequestQueue.
         queue.add(jsonRequest);
+
+        TextView poweredBy = rootView.findViewById(R.id.poweredBy);
+        poweredBy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = "https://www.themoviedb.org/";
+                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                i.setPackage("com.android.chrome");
+                try {
+                    getContext().startActivity(i);
+                } catch (ActivityNotFoundException e) {
+                    Toast.makeText(getContext(), "unable to open chrome", Toast.LENGTH_SHORT).show();
+                    i.setPackage(null);
+                    getContext().startActivity(i);
+                }
+            }
+        });
+
+
+        TextView tvBtn = rootView.findViewById(R.id.tv_btn);
+        TextView movieBtn = rootView.findViewById(R.id.movie_btn);
+        tvBtn.setTextColor(getResources().getColor(R.color.colorPrimary));
+        tvBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvBtn.setTextColor(getResources().getColor(R.color.white));
+                movieBtn.setTextColor(getResources().getColor(R.color.colorPrimary));
+                callPopular(popular_tv);
+                callTopRated(top_rated_tv);
+            }
+        });
+
+
+        movieBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                movieBtn.setTextColor(getResources().getColor(R.color.white));
+                tvBtn.setTextColor(getResources().getColor(R.color.colorPrimary));
+                callPopular(popular_movies);
+                callTopRated(top_rated_movies);
+            }
+        });
 
 
         return rootView;
