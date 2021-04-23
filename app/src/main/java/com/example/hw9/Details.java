@@ -5,10 +5,16 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.ActivityNotFoundException;
+import android.content.Intent;
 import android.graphics.Movie;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -175,5 +181,32 @@ public class Details extends AppCompatActivity {
 
         // Add the request to the RequestQueue.
         queue.add(jsonRequest);
+        ImageView fbShareBtn = findViewById(R.id.fbShareBtn);
+        ImageView twitterShareBtn = findViewById(R.id.tweetShareBtn);
+
+        fbShareBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = "https://www.themoviedb.org/" + media_type + "/" + id;
+                String fbURL = "https://www.facebook.com/sharer/sharer.php?u=" + url ;
+                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(fbURL));
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                i.setPackage("com.android.chrome");
+                startActivity(i);
+            }
+        });
+
+        twitterShareBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String url = "https://www.themoviedb.org/" + media_type + "/" + id;
+                String tweetUrl = "https://twitter.com/intent/tweet?text=Check this out! " + url;
+                Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(tweetUrl));
+                i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                i.setPackage("com.android.chrome");
+                startActivity(i);
+            }
+        });
     }
+
 }

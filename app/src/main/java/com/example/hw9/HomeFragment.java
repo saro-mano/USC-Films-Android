@@ -133,7 +133,6 @@ public class HomeFragment extends Fragment {
     }
 
     private void callPopular(ArrayList popular_movies){
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
         RecyclerView recyclerView = rootView.findViewById(R.id.popular);
         recyclerView.setLayoutManager(layoutManager);
@@ -160,6 +159,7 @@ public class HomeFragment extends Fragment {
         ArrayList<MovieData> popular_movies = new ArrayList<>();
         ArrayList<MovieData> popular_tv = new ArrayList<>();
         ArrayList<MovieData> top_rated_tv = new ArrayList<>();
+        ArrayList<SliderData> trending_tv = new ArrayList<>();
 
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
@@ -172,6 +172,7 @@ public class HomeFragment extends Fragment {
                             JSONArray json_popular_mov = response.getJSONArray("popular_movies");
                             JSONArray json_popular_tv = response.getJSONArray("popular_tv");
                             JSONArray json_top_rated_tv = response.getJSONArray("top_rated_tv");
+                            JSONArray json_trending_tv = response.getJSONArray("trending_tv");
 
                             for (int i = 0 ; i < jsonArray.length() ; i++){
                                 JSONObject movie = jsonArray.getJSONObject(i);
@@ -181,6 +182,8 @@ public class HomeFragment extends Fragment {
                             }
 
                             callSlideShow(currently_playing_movies);
+
+
                             for(int i = 0; i < json_top_rated_mov.length() ; i++){
                                 JSONObject movie = json_top_rated_mov.getJSONObject(i);
                                 String url = movie.getString("poster_path");
@@ -201,6 +204,13 @@ public class HomeFragment extends Fragment {
                                 popular_movies.add(new MovieData(url,id,media_type));
                             }
                             callPopular(popular_movies);
+
+                            for (int i = 0 ; i < json_trending_tv.length() ; i++){
+                                JSONObject movie = json_trending_tv.getJSONObject(i);
+
+                                String url = movie.getString("poster_path");
+                                trending_tv.add(new SliderData(url));
+                            }
 
                             for(int i = 0; i < json_popular_tv.length() ; i++){
                                 JSONObject movie = json_popular_tv.getJSONObject(i);
@@ -261,6 +271,7 @@ public class HomeFragment extends Fragment {
                 movieBtn.setTextColor(getResources().getColor(R.color.colorPrimary));
                 callPopular(popular_tv);
                 callTopRated(top_rated_tv);
+                callSlideShow(trending_tv);
             }
         });
 
@@ -272,6 +283,7 @@ public class HomeFragment extends Fragment {
                 tvBtn.setTextColor(getResources().getColor(R.color.colorPrimary));
                 callPopular(popular_movies);
                 callTopRated(top_rated_movies);
+                callSlideShow(currently_playing_movies);
             }
         });
 

@@ -110,6 +110,37 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/yearHeading" />
 
+        <ImageView
+            android:id="@+id/watchlistBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_add_circle_outline_24"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/yearContent">
+
+        </ImageView>
+
+
+
+        <ImageView
+            android:id="@+id/fbShareBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_facebook_24"
+            app:layout_constraintStart_toEndOf="@+id/watchlistBtn"
+            app:layout_constraintTop_toBottomOf="@+id/yearContent">
+
+        </ImageView>
+
+        <ImageView
+            android:id="@+id/tweetShareBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_twitter_logo_dialog"
+            app:layout_constraintStart_toEndOf="@+id/fbShareBtn"
+            app:layout_constraintTop_toBottomOf="@+id/yearContent">
+
+        </ImageView>
 
         <TextView
             android:id="@+id/castHeading"
@@ -121,7 +152,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/yearContent" />
+            app:layout_constraintTop_toBottomOf="@+id/watchlistBtn" />
 
 
 <!--                    <RelativeLayout-->
