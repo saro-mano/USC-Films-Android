@@ -28,10 +28,12 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     private ArrayList<String> images = new ArrayList<>();
     private ArrayList<String> id = new ArrayList<>();
     private ArrayList<String> media_type = new ArrayList<>();
+    private ArrayList<SearchData> data;
     private Context context;
     Toast toast;
 
     public SearchAdapter(Context context ,ArrayList<SearchData> data) {
+        this.data = data;
         for(int i = 0; i < data.size() ; i++){
             images.add(data.get(i).getBackground());
 //            id.add(data.get(i).getId());
@@ -53,8 +55,36 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
         Glide.with(context)
                 .asBitmap()
-                .load(images.get(position))
+                .load(data.get(position).getBackground())
                 .into(holder.image);
+
+
+        holder.title.setText(data.get(position).getTitle());
+        holder.rating.setText(data.get(position).getRating());
+
+        String movieAndYearStr = data.get(position).getMedia_type().toUpperCase() + " (" + data.get(position).getYear() + ")";
+        holder.mediaAndYear.setText(movieAndYearStr);
+
+        holder.card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                try{
+                    Intent intent = new Intent(context,Details.class);
+                    bundle.putString("id", data.get(position).getId());
+                    bundle.putString("media_type",data.get(position).getMedia_type());
+                    intent.putExtras(bundle);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+//                    Toast.makeText(context,"Your answer is correct!" , Toast.LENGTH_LONG ).show();
+                }
+                catch(Exception e){
+                    System.out.println(e);
+                }
+            }
+        });
+
+
     }
 
     @Override
@@ -64,11 +94,17 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView image;
+        TextView rating, mediaAndYear, title;
+        CardView card;
 
 
 
         public ViewHolder(View itemView){
             super(itemView);
+            card = itemView.findViewById(R.id.searchCard);
+            rating = itemView.findViewById(R.id.ratingNumber);
+            mediaAndYear = itemView.findViewById(R.id.mediaAndYear);
+            title = itemView.findViewById(R.id.posterTitle);
             image = itemView.findViewById(R.id.searchImg);
         }
     }

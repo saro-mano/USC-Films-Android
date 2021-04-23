@@ -97,20 +97,6 @@ public class SearchFragment extends Fragment {
         searchView.setQueryHint("Search movies and TV");
         searchView.setMaxWidth(Integer.MAX_VALUE);
 
-//        searchView.setOnSearchClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                txtHeader.setVisibility(View.GONE);
-//            }
-//        });
-
-//        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-//            @Override
-//            public boolean onClose() {
-//                txtHeader.setVisibility(View.VISIBLE);
-//                return false;
-//            }
-//        });
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override

@@ -205,7 +205,7 @@ public class HomeFragment extends Fragment {
                             }
                             callPopular(popular_movies);
 
-                            for (int i = 0 ; i < json_trending_tv.length() ; i++){
+                            for (int i = 0 ; i < 6 ; i++){
                                 JSONObject movie = json_trending_tv.getJSONObject(i);
 
                                 String url = movie.getString("poster_path");
