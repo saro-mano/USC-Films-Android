@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -125,7 +126,8 @@ public class WatchlistFragment extends Fragment {
                 }
             }
             else{
-                System.out.println("Nothing in WatchList");
+                TextView watchListTxt = rootView.findViewById(R.id.nilWatchListText);
+                watchListTxt.setVisibility(View.VISIBLE);
             }
 
             RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.watchListRecycler);

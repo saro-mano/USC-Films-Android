@@ -46,6 +46,7 @@ public class WatchListAdapter extends RecyclerView.Adapter<WatchListAdapter.MyVi
     }
 
 
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void resetWatchList(ArrayList<MovieData> watchList){
         SharedPreferences pref = context.getSharedPreferences("MyPref", 0); // 0 - for private mode
@@ -74,9 +75,17 @@ public class WatchListAdapter extends RecyclerView.Adapter<WatchListAdapter.MyVi
                     moviedata.remove(position);
                     notifyItemRemoved(position);
                     notifyItemRangeChanged(position, moviedata.size());
+//                    if(moviedata.size() == 0){
+//                       Intent intent = new Intent(context, WatchlistFragment.class);
+//                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                        context.startActivity(intent);
+//                    }
                     resetWatchList(moviedata);
             }
         });
+
+
+
 
         holder.watchCard.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,6 +115,8 @@ public class WatchListAdapter extends RecyclerView.Adapter<WatchListAdapter.MyVi
         ImageView image;
         ImageView remove;
         CardView watchCard;
+        TextView watchListTxt;
+
 
         public MyViewHolder(View itemView) {
             super(itemView);
