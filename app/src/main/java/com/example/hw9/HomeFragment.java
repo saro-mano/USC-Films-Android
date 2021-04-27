@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,7 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -76,7 +79,9 @@ public class HomeFragment extends Fragment {
         return fragment;
     }
 
-    private View rootView;
+    private View rootView,rootLinear;
+    private ConstraintLayout spinner;
+
 
 
     public void onCreate(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
@@ -85,8 +90,6 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-
 
     }
 
@@ -150,6 +153,8 @@ public class HomeFragment extends Fragment {
         rootView =  inflater.inflate(R.layout.fragment_home, container,
                 false);
 
+        spinner = (ConstraintLayout) rootView.findViewById(R.id.loadingLayout);
+
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
         String url = "http://10.0.2.2:8080/homeContent";
@@ -161,6 +166,7 @@ public class HomeFragment extends Fragment {
         ArrayList<MovieData> top_rated_tv = new ArrayList<>();
         ArrayList<SliderData> trending_tv = new ArrayList<>();
 
+        spinner.setVisibility(View.VISIBLE);
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
                     @Override
@@ -173,7 +179,6 @@ public class HomeFragment extends Fragment {
                             JSONArray json_popular_tv = response.getJSONArray("popular_tv");
                             JSONArray json_top_rated_tv = response.getJSONArray("top_rated_tv");
                             JSONArray json_trending_tv = response.getJSONArray("trending_tv");
-
                             for (int i = 0 ; i < jsonArray.length() ; i++){
                                 JSONObject movie = jsonArray.getJSONObject(i);
 
@@ -189,7 +194,10 @@ public class HomeFragment extends Fragment {
                                 String url = movie.getString("poster_path");
                                 String id = movie.getString("id");
                                 String media_type = "movie";
-                                System.out.println("Movie URL:"+ url);
+
+                                //to_rate_moviesurl.add("url")
+                                //top_id.add("id")
+                                //top_media_tyoe("movue")
 
                                 top_rated_movies.add(new MovieData(url,id,media_type));
                             }
@@ -231,6 +239,7 @@ public class HomeFragment extends Fragment {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        spinner.setVisibility(View.GONE);
                     }
                 }, new Response.ErrorListener() {
             @Override

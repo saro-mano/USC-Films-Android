@@ -1,14 +1,18 @@
 package com.example.hw9;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Movie;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.GridView;
@@ -26,6 +30,7 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,6 +63,76 @@ public class Details extends AppCompatActivity {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void checkWatchList(SharedPreferences pref, String id, String media_type, String profile_path){
+        SharedPreferences.Editor editor = pref.edit();
+        ImageView watchlistBtn = findViewById(R.id.watchlistBtn);
+        String key = "watchlist";
+
+        Boolean flag = true;
+        String main_arr_str = pref.getString(key,null);
+        System.out.println("In Detail: " + main_arr_str);
+        if(main_arr_str != null && main_arr_str.length() != 0){
+            String[] arr = main_arr_str.split("#");
+            for(int j = 0 ; j < arr.length ; j++) {
+                String[] temp = arr[j].split(",");
+                if (temp[0].equals(id) && temp[1].equals(media_type)) {
+                    //removing the list item
+                    watchlistBtn.setImageResource(R.drawable.ic_baseline_remove_circle_outline_24);;
+                    flag = false;
+                }
+            }
+            if(flag){
+                watchlistBtn.setImageResource(R.drawable.ic_baseline_add_circle_outline_24);
+            }
+        }
+
+        watchlistBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Boolean flag = true;
+                String key = "watchlist";
+                String value = id + "," + media_type+ "," + profile_path;
+                String main_arr_str = pref.getString(key,null);
+                System.out.println("Before: " + main_arr_str);
+                if(main_arr_str != null && main_arr_str.length() != 0){
+                    String[] arr = main_arr_str.split("#");
+                    for(int j = 0 ; j < arr.length ; j++) {
+                        String[] temp = arr[j].split(",");
+                        if (temp[0].equals(id) && temp[1].equals(media_type)) {
+                            //removing the list item
+                            arr = ArrayUtils.remove(arr, j);
+                            main_arr_str = String.join("#", arr);
+                            main_arr_str += "#";
+                            System.out.println("Delimited"+ main_arr_str);
+                            flag = false;
+                            watchlistBtn.setImageResource(R.drawable.ic_baseline_add_circle_outline_24);
+                        }
+                    }
+                    if(flag){
+                        main_arr_str = main_arr_str + value + "#";
+                        watchlistBtn.setImageResource(R.drawable.ic_baseline_remove_circle_outline_24);
+                    }
+                }
+                else{
+                    main_arr_str = value + "#";
+                    watchlistBtn.setImageResource(R.drawable.ic_baseline_remove_circle_outline_24);
+                }
+                editor.putString(key,main_arr_str);
+                editor.commit();
+
+//                if(temp == null){
+//                    editor.putString(key,profile_path);
+//                    watchlistBtn.setImageResource(R.drawable.ic_baseline_remove_circle_outline_24);;
+//                }
+//                else{
+//                    editor.remove(key);
+//                    watchlistBtn.setImageResource(R.drawable.ic_baseline_add_circle_outline_24);
+//                }
+            }
+        });
+    }
+
 
     GridView simpleList;
     ArrayList<Cast> castList=new ArrayList<>();
@@ -81,6 +156,11 @@ public class Details extends AppCompatActivity {
         String id = bundle.getString("id");
         String media_type = bundle.getString("media_type");
 
+        SharedPreferences pref = this.getSharedPreferences("MyPref", 0); // 0 - for private mode
+
+
+        ConstraintLayout loadingScreen = (ConstraintLayout) findViewById(R.id.loadingDetail);
+
 
         //Volley Request:
 
@@ -91,8 +171,10 @@ public class Details extends AppCompatActivity {
         System.out.println(url);
 
         ArrayList<SliderData> currently_playing_movies = new ArrayList<>();
+        loadingScreen.setVisibility(View.VISIBLE);
         JsonObjectRequest jsonRequest = new JsonObjectRequest(Request.Method.GET, url, null,
                 new Response.Listener<JSONObject>() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onResponse(JSONObject response) {
                         // Display the first 500 characters of the response string.
@@ -103,9 +185,11 @@ public class Details extends AppCompatActivity {
                             String overview = response.getString("overview");
                             String genre = response.getString("genres");
                             String year = response.getString("year");
+                            String profile_path = response.getString("poster_path");
                             JSONArray cast_arr = response.getJSONArray("movie_cast");
                             JSONArray rev_arr = response.getJSONArray("movie_rev");
                             JSONArray recommended_arr = response.getJSONArray("recommended_mov");
+
 
                             //Setting Youtube
                             setYoutube(trailer);
@@ -125,6 +209,10 @@ public class Details extends AppCompatActivity {
                             //Setting Year
                             TextView setYear = findViewById(R.id.yearContent);
                             setYear.setText(year);
+
+                            //Calling WatchList Check
+
+                            checkWatchList(pref,id,media_type,profile_path);
 
                             //Setting Cast
                             for(int i = 0 ; i < cast_arr.length() ; i++){
@@ -168,9 +256,11 @@ public class Details extends AppCompatActivity {
 
 
 
+
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+                        loadingScreen.setVisibility(View.GONE);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -207,6 +297,9 @@ public class Details extends AppCompatActivity {
                 startActivity(i);
             }
         });
+
+
+        //checking for watchlist
     }
 
 }

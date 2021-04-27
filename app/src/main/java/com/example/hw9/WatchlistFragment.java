@@ -1,12 +1,26 @@
 package com.example.hw9;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+
+import org.apache.commons.lang3.ArrayUtils;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,10 +69,82 @@ public class WatchlistFragment extends Fragment {
         }
     }
 
+    private void resetWatchList(ArrayList<MovieData> watchList){
+        SharedPreferences pref = getContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
+        SharedPreferences.Editor editor = pref.edit();
+        String key = "watchlist";
+        String arr_builder = "";
+        for(int i = 0; i < watchList.size() ; i++){
+            String val = watchList.get(i).getId() + "," + watchList.get(i).getMedia_type() + "," + watchList.get(i).getImgUrl();
+            arr_builder = arr_builder + val + "#";
+        }
+        editor.putString(key,arr_builder);
+        editor.commit();
+    }
+
+    ArrayList<MovieData> watchList = new ArrayList<>();
+    View rootView;
+    ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.START | ItemTouchHelper.END | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT, 0){
+
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            int fromPosition = viewHolder.getAdapterPosition();
+            int toPosition = target.getAdapterPosition();
+
+            Collections.swap(watchList,fromPosition,toPosition );
+
+            recyclerView.getAdapter().notifyItemMoved(fromPosition,toPosition);
+            recyclerView.getAdapter().notifyDataSetChanged();
+//            resetWatchList(watchList);
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+        }
+    };
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_watchlist, container, false);
+        SharedPreferences pref = getContext().getSharedPreferences("MyPref", 0); // 0 - for private mode
+        SharedPreferences.Editor editor = pref.edit();
+
+//        // Inflate the layout for this fragment
+        rootView =  inflater.inflate(R.layout.fragment_watchlist, container, false);
+        try {
+
+            String key = "watchlist";
+            String main_arr_str = pref.getString(key,null);
+            System.out.println("Before in WatchList Fragment: " + main_arr_str);
+            if(main_arr_str != null && main_arr_str.length() != 0){
+                String[] arr = main_arr_str.split("#");
+                for(int j = 0 ; j < arr.length ; j++) {
+                    String[] temp = arr[j].split(",");
+                    watchList.add(new MovieData(temp[2],temp[0],temp[1]));
+                }
+            }
+            else{
+                System.out.println("Nothing in WatchList");
+            }
+
+            RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.watchListRecycler);
+            // set a GridLayoutManager with default vertical orientation and 2 number of columns
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),3);
+            recyclerView.setLayoutManager(gridLayoutManager); // set LayoutManager to RecyclerView
+            //  call the constructor of CustomAdapter to send the reference and data to Adapter
+            WatchListAdapter customAdapter = new WatchListAdapter(getContext(), watchList);
+            recyclerView.setAdapter(customAdapter); // set the Adapter to RecyclerView
+
+            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
+            itemTouchHelper.attachToRecyclerView(recyclerView);
+
+
+        }
+        catch (Exception e){
+            System.out.println(e);
+        }
+
+        return rootView;
     }
 }

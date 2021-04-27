@@ -1,9 +1,12 @@
 package com.example.hw9;
 
 import android.content.ActivityNotFoundException;
+import java.lang.Object;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -14,9 +17,12 @@ import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
 
@@ -27,6 +33,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private ArrayList<String> media_type = new ArrayList<>();
     private Context context;
     Toast toast;
+
 
     public RecyclerViewAdapter(Context context ,ArrayList<MovieData> data) {
         for(int i = 0; i < data.size() ; i++){
@@ -48,6 +55,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
+        SharedPreferences pref = context.getSharedPreferences("MyPref", 0); // 0 - for private mode
+        SharedPreferences.Editor editor = pref.edit();
+
         Glide.with(context)
                 .asBitmap()
                 .load(images.get(position))
@@ -64,6 +74,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 popup.inflate(R.menu.poster_options);
                 //adding click listener
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         switch (item.getItemId()) {
@@ -112,6 +123,37 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                 }
                                 return true;
                             case R.id.watchlist:
+//                                editor.clear();
+//                                editor.commit();
+                                Boolean flag = true;
+                                String key = "watchlist";
+                                String value = id.get(position) + "," + media_type.get(position) + "," + images.get(position);
+                                String main_arr_str = pref.getString(key,null);
+                                System.out.println("Before: " + main_arr_str);
+                                if(main_arr_str != null){
+                                    String[] arr = main_arr_str.split("#");
+                                    for(int j = 0 ; j < arr.length ; j++) {
+                                        String[] temp = arr[j].split(",");
+                                        if (temp[0].equals(id.get(position)) && temp[1].equals(media_type.get(position))) {
+                                            //removing the list item
+                                            arr = ArrayUtils.remove(arr, j);
+                                            main_arr_str = String.join("#", arr);
+                                            main_arr_str += "#";
+                                            System.out.println("Delimited"+ main_arr_str);
+                                            flag = false;
+                                        }
+                                    }
+                                    if(flag){
+                                        main_arr_str = main_arr_str + value + "#";
+                                    }
+                                }
+                                if(main_arr_str == null){
+                                    main_arr_str = value + "#";
+                                }
+                                System.out.println("After: " + main_arr_str);
+                                editor.putString(key,main_arr_str);
+                                editor.commit();
+                                Toast.makeText(context,"Added",Toast.LENGTH_LONG).show();
                                 return true;
                             default:
                                 return false;
