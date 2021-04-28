@@ -107,7 +107,7 @@ public class SearchFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String input) {
-                System.out.println(input);
+
                 String url = "http://10.0.2.2:8080/getSearchResults?inp="+input;
                 RequestQueue queue = Volley.newRequestQueue(getActivity());
 
@@ -121,7 +121,7 @@ public class SearchFragment extends Fragment {
                                     System.out.println(response);
                                     for(int i = 0 ; i < response.length() ; i++){
                                         JSONObject detail = response.getJSONObject(i);
-                                        String title = detail.getString("title");
+                                        String title = detail.getString("title").toUpperCase();
                                         String media_type = detail.getString("media_type");
                                         String rating = detail.getString("rating");
                                         String background = detail.getString("poster_path");

@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,6 +46,31 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         this.context = context;
     }
 
+    private void renameMenu(PopupMenu popupMenu, SharedPreferences pref,String id, String media_type){
+
+        Boolean flag = true;
+        String key = "watchlist";
+        //WatchList: "id,media,url$id2,media2,url2$"
+        String main_arr_str = pref.getString(key,null);
+        if(main_arr_str != null){
+            String[] arr = main_arr_str.split("#");
+            for(int j = 0 ; j < arr.length ; j++) {
+                String[] temp = arr[j].split(",");
+                if (temp[0].equals(id) && temp[1].equals(media_type)) {
+                    //removing the list item
+                    popupMenu.getMenu().getItem(3).setTitle("Remove from WatchList");
+                    flag = false;
+                }
+            }
+            if(flag){
+                popupMenu.getMenu().getItem(3).setTitle("Add to WatchList");
+            }
+        }
+        if(main_arr_str == null){
+            popupMenu.getMenu().getItem(3).setTitle("Add to WatchList");
+        }
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -58,11 +85,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         SharedPreferences pref = context.getSharedPreferences("MyPref", 0); // 0 - for private mode
         SharedPreferences.Editor editor = pref.edit();
 
+
+
+//        PopupMenu popup = new PopupMenu(context,holder.popUpButton);
+//        popup.getMenu().getItem(0).setTitle("Remove from WatchList");
+
         Glide.with(context)
                 .asBitmap()
                 .load(images.get(position))
+                .centerCrop()
                 .into(holder.image);
-
 
 
         holder.popUpButton.setOnClickListener(new View.OnClickListener() {
@@ -72,6 +104,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 PopupMenu popup = new PopupMenu(context,holder.popUpButton);
                 //inflating menu from xml resource
                 popup.inflate(R.menu.poster_options);
+
+//                popup.getMenu().getItem(3).setTitle("Remove from WatchList");
+                renameMenu(popup,pref,id.get(position),media_type.get(position));
                 //adding click listener
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -127,9 +162,9 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 //                                editor.commit();
                                 Boolean flag = true;
                                 String key = "watchlist";
+                                //WatchList: "id,media,url$id2,media2,url2$"
                                 String value = id.get(position) + "," + media_type.get(position) + "," + images.get(position);
                                 String main_arr_str = pref.getString(key,null);
-                                System.out.println("Before: " + main_arr_str);
                                 if(main_arr_str != null){
                                     String[] arr = main_arr_str.split("#");
                                     for(int j = 0 ; j < arr.length ; j++) {
@@ -139,7 +174,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                             arr = ArrayUtils.remove(arr, j);
                                             main_arr_str = String.join("#", arr);
                                             main_arr_str += "#";
-                                            System.out.println("Delimited"+ main_arr_str);
                                             flag = false;
                                         }
                                     }
@@ -153,7 +187,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                 System.out.println("After: " + main_arr_str);
                                 editor.putString(key,main_arr_str);
                                 editor.commit();
-                                Toast.makeText(context,"Added",Toast.LENGTH_LONG).show();
+                                Toast.makeText(view.getContext(),"Added",Toast.LENGTH_LONG).show();
                                 return true;
                             default:
                                 return false;
@@ -186,9 +220,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
             }
         });
-
-
-
     }
 
     @Override
@@ -199,6 +230,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public class ViewHolder extends RecyclerView.ViewHolder{
         ImageView image;
         ImageView popUpButton;
+        Menu menu;
 
 
         public ViewHolder(View itemView){

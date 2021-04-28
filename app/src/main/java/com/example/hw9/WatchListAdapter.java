@@ -31,10 +31,12 @@ public class WatchListAdapter extends RecyclerView.Adapter<WatchListAdapter.MyVi
 
     ArrayList<MovieData> moviedata;
     Context context;
+    View watchView;
 
-    public WatchListAdapter(Context context, ArrayList<MovieData> moviedata) {
+    public WatchListAdapter(Context context, ArrayList<MovieData> moviedata, View watchView) {
         this.context = context;
         this.moviedata = moviedata;
+        this.watchView = watchView;
     }
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -66,6 +68,7 @@ public class WatchListAdapter extends RecyclerView.Adapter<WatchListAdapter.MyVi
         Glide.with(context)
                 .asBitmap()
                 .load(moviedata.get(position).getImgUrl())
+                .centerCrop()
                 .into(holder.image);
 
         holder.remove.setOnClickListener(new View.OnClickListener() {
@@ -75,16 +78,13 @@ public class WatchListAdapter extends RecyclerView.Adapter<WatchListAdapter.MyVi
                     moviedata.remove(position);
                     notifyItemRemoved(position);
                     notifyItemRangeChanged(position, moviedata.size());
-//                    if(moviedata.size() == 0){
-//                       Intent intent = new Intent(context, WatchlistFragment.class);
-//                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//                        context.startActivity(intent);
-//                    }
+                    notifyDataSetChanged();
+                    if(moviedata.size() == 0){
+                       watchView.findViewById(R.id.nilWatchListText).setVisibility(View.VISIBLE);
+                    }
                     resetWatchList(moviedata);
             }
         });
-
-
 
 
         holder.watchCard.setOnClickListener(new View.OnClickListener() {
@@ -105,6 +105,15 @@ public class WatchListAdapter extends RecyclerView.Adapter<WatchListAdapter.MyVi
                 }
             }
         });
+
+        String media_type = moviedata.get(position).getMedia_type();
+        if (media_type.equals("tv")){
+            media_type = "TV";
+        }
+        else{
+            media_type = "Movie";
+        }
+        holder.mediaTypeWatchLst.setText(media_type);
     }
     @Override
     public int getItemCount() {
@@ -115,7 +124,7 @@ public class WatchListAdapter extends RecyclerView.Adapter<WatchListAdapter.MyVi
         ImageView image;
         ImageView remove;
         CardView watchCard;
-        TextView watchListTxt;
+        TextView mediaTypeWatchLst;
 
 
         public MyViewHolder(View itemView) {
@@ -124,6 +133,7 @@ public class WatchListAdapter extends RecyclerView.Adapter<WatchListAdapter.MyVi
             image = itemView.findViewById(R.id.watchlistPoster);
             remove = itemView.findViewById(R.id.removeImg);
             watchCard = itemView.findViewById(R.id.watchCard);
+            mediaTypeWatchLst = itemView.findViewById(R.id.mediaTypeWatchLst);
         }
     }
 }

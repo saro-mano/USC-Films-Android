@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:paddingBottom="15dp"
     >
 
@@ -13,7 +13,7 @@
         android:background="@color/theme"
         android:foreground="?android:attr/selectableItemBackground"
         android:clickable="true"
-        app:cardCornerRadius="20dp"
+        app:cardCornerRadius="15dp"
         android:layout_width="130dp"
         android:layout_height="150dp"
         android:padding="15dp"
@@ -29,11 +29,27 @@
                 android:id="@+id/watchlistPoster"
                 android:layout_width="130dp"
                 android:layout_height="150dp"
+                android:foreground="@drawable/gradient_layout"
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_theaters_white_18dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
+                android:id="@+id/mediaTypeWatchLst"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:text="TV"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="@+id/watchlistPoster"
+                app:layout_constraintEnd_toStartOf="@+id/removeImg"
+                app:layout_constraintHorizontal_bias="0.222"
+                app:layout_constraintStart_toStartOf="@+id/watchlistPoster">
+
+            </TextView>
 
             <ImageView
                 android:id="@+id/removeImg"
@@ -43,7 +59,7 @@
                 android:layout_marginLeft="160dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="8dp"
                 android:src="@drawable/ic_baseline_remove_circle_outline_24"
                 app:layout_constraintBottom_toBottomOf="@+id/watchlistPoster"
                 app:layout_constraintEnd_toEndOf="@+id/watchlistPoster"

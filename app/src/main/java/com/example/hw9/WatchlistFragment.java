@@ -92,12 +92,12 @@ public class WatchlistFragment extends Fragment {
             int fromPosition = viewHolder.getAdapterPosition();
             int toPosition = target.getAdapterPosition();
 
-            Collections.swap(watchList,fromPosition,toPosition );
+            Collections.swap(watchList,fromPosition,toPosition);
 
             recyclerView.getAdapter().notifyItemMoved(fromPosition,toPosition);
-            recyclerView.getAdapter().notifyDataSetChanged();
-//            resetWatchList(watchList);
-            return false;
+            resetWatchList(watchList);
+
+            return true;
         }
 
         @Override
@@ -114,7 +114,6 @@ public class WatchlistFragment extends Fragment {
 //        // Inflate the layout for this fragment
         rootView =  inflater.inflate(R.layout.fragment_watchlist, container, false);
         try {
-
             String key = "watchlist";
             String main_arr_str = pref.getString(key,null);
             System.out.println("Before in WatchList Fragment: " + main_arr_str);
@@ -130,18 +129,17 @@ public class WatchlistFragment extends Fragment {
                 watchListTxt.setVisibility(View.VISIBLE);
             }
 
+
             RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.watchListRecycler);
             // set a GridLayoutManager with default vertical orientation and 2 number of columns
             GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(),3);
             recyclerView.setLayoutManager(gridLayoutManager); // set LayoutManager to RecyclerView
             //  call the constructor of CustomAdapter to send the reference and data to Adapter
-            WatchListAdapter customAdapter = new WatchListAdapter(getContext(), watchList);
+            WatchListAdapter customAdapter = new WatchListAdapter(getContext(), watchList, rootView);
             recyclerView.setAdapter(customAdapter); // set the Adapter to RecyclerView
 
             ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
             itemTouchHelper.attachToRecyclerView(recyclerView);
-
-
         }
         catch (Exception e){
             System.out.println(e);

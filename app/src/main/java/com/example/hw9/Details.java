@@ -26,6 +26,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener;
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView;
@@ -40,8 +41,15 @@ import java.util.ArrayList;
 public class Details extends AppCompatActivity {
 
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void setYoutube(String trailer){
         YouTubePlayerView youTubePlayerView = findViewById(R.id.youTubePlayerView);
+        ImageView backgroundImg = findViewById(R.id.backgroundImg);
+
+        backgroundImg.setVisibility(View.GONE);
+        youTubePlayerView.setVisibility(View.VISIBLE);
+//        backgroundImg.setTranslationZ(Float.parseFloat("0dp"));
+//        youTubePlayerView.setTranslationZ(Float.parseFloat("1dp"));
         getLifecycle().addObserver(youTubePlayerView);
 
         youTubePlayerView.addYouTubePlayerListener(new AbstractYouTubePlayerListener() {
@@ -58,7 +66,7 @@ public class Details extends AppCompatActivity {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext(),LinearLayoutManager.HORIZONTAL,false);
         RecyclerView recyclerView = findViewById(R.id.recommendedPicks);
         recyclerView.setLayoutManager(layoutManager);
-        RecyclerViewAdapter adapter1 = new RecyclerViewAdapter(getApplicationContext(),top_rated_movies);
+        RecViewAdapter adapter1 = new RecViewAdapter(getApplicationContext(),top_rated_movies);
         recyclerView.setAdapter(adapter1);
 
     }
@@ -185,6 +193,7 @@ public class Details extends AppCompatActivity {
                             String overview = response.getString("overview");
                             String genre = response.getString("genres");
                             String year = response.getString("year");
+                            String background_path = response.getString("backdrop_path");
                             String profile_path = response.getString("poster_path");
                             JSONArray cast_arr = response.getJSONArray("movie_cast");
                             JSONArray rev_arr = response.getJSONArray("movie_rev");
@@ -192,7 +201,24 @@ public class Details extends AppCompatActivity {
 
 
                             //Setting Youtube
-                            setYoutube(trailer);
+                            if(trailer.equals("None")){
+                                ImageView backgroundImg = findViewById(R.id.backgroundImg);
+                                YouTubePlayerView youTubePlayerView = findViewById(R.id.youTubePlayerView);
+
+                                backgroundImg.setVisibility(View.VISIBLE);
+                                youTubePlayerView.setVisibility(View.GONE);
+
+//                                backgroundImg.setTranslationZ(Float.parseFloat("1dp"));
+//                                youTubePlayerView.setTranslationZ(Float.parseFloat("0dp"));
+                                Glide.with(getApplicationContext())
+                                        .asBitmap()
+                                        .load(background_path)
+                                        .into(backgroundImg);
+                            }
+
+                            else{
+                                setYoutube(trailer);
+                            }
 
                             //Setting Title
                             TextView setTitle = findViewById(R.id.textView3);
@@ -248,13 +274,10 @@ public class Details extends AppCompatActivity {
                                 JSONObject movie = recommended_arr.getJSONObject(i);
                                 String url = movie.getString("poster_path");
                                 String id = movie.getString("id");
-                                String media_type = "movie";
                                 recommendedList.add(new MovieData(url,id,media_type));
                             }
 
                             callRecommeded(recommendedList);
-
-
 
 
                         } catch (Exception e) {

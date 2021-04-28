@@ -9,7 +9,7 @@
         android:id="@+id/searchFragment"
         android:icon="@drawable/ic_baseline_search_24"
         />
-    <item android:title="Item"
+    <item android:title="Watchlist"
         android:id="@+id/watchlistFragment"
         android:icon="@drawable/ic_outline_watch_later_24"
 
