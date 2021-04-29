@@ -76,7 +76,7 @@ public class WatchlistFragment extends Fragment {
         String key = "watchlist";
         String arr_builder = "";
         for(int i = 0; i < watchList.size() ; i++){
-            String val = watchList.get(i).getId() + "," + watchList.get(i).getMedia_type() + "," + watchList.get(i).getImgUrl();
+            String val = watchList.get(i).getId() + "," + watchList.get(i).getMedia_type() + "," + watchList.get(i).getImgUrl() + "," + watchList.get(i).getTitle();
             arr_builder = arr_builder + val + "#";
         }
         editor.putString(key,arr_builder);
@@ -94,11 +94,14 @@ public class WatchlistFragment extends Fragment {
 
             Collections.swap(watchList,fromPosition,toPosition);
 
-            recyclerView.getAdapter().notifyItemMoved(fromPosition,toPosition);
+            recyclerView.getAdapter().notifyDataSetChanged();
+//            recyclerView.getAdapter().notifyItemMoved(fromPosition,toPosition);
+//            recyclerView.getAdapter().notifyItemRangeChanged(0,watchList.size());
             resetWatchList(watchList);
 
             return true;
         }
+
 
         @Override
         public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
@@ -121,7 +124,7 @@ public class WatchlistFragment extends Fragment {
                 String[] arr = main_arr_str.split("#");
                 for(int j = 0 ; j < arr.length ; j++) {
                     String[] temp = arr[j].split(",");
-                    watchList.add(new MovieData(temp[2],temp[0],temp[1]));
+                    watchList.add(new MovieData(temp[2],temp[0],temp[1],temp[3]));
                 }
             }
             else{

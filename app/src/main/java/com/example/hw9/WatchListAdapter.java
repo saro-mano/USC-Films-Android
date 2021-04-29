@@ -14,9 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -27,7 +29,7 @@ import org.w3c.dom.Text;
 import java.util.ArrayList;
 
 
-public class WatchListAdapter extends RecyclerView.Adapter<WatchListAdapter.MyViewHolder> {
+public class WatchListAdapter extends RecyclerView.Adapter<WatchListAdapter.MyViewHolder>{
 
     ArrayList<MovieData> moviedata;
     Context context;
@@ -56,7 +58,7 @@ public class WatchListAdapter extends RecyclerView.Adapter<WatchListAdapter.MyVi
         String key = "watchlist";
         String arr_builder = "";
         for(int i = 0; i < watchList.size() ; i++){
-            String val = watchList.get(i).getId() + "," + watchList.get(i).getMedia_type() + "," + watchList.get(i).getImgUrl();
+            String val = watchList.get(i).getId() + "," + watchList.get(i).getMedia_type() + "," + watchList.get(i).getImgUrl() + "," + watchList.get(i).getTitle();
             arr_builder = arr_builder + val + "#";
         }
         editor.putString(key,arr_builder);
@@ -75,14 +77,16 @@ public class WatchListAdapter extends RecyclerView.Adapter<WatchListAdapter.MyVi
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                    moviedata.remove(position);
+                Toast.makeText(v.getContext(),moviedata.get(position).getTitle() + " was removed to the watchlist",Toast.LENGTH_LONG).show();
+                moviedata.remove(position);
                     notifyItemRemoved(position);
                     notifyItemRangeChanged(position, moviedata.size());
                     notifyDataSetChanged();
                     if(moviedata.size() == 0){
                        watchView.findViewById(R.id.nilWatchListText).setVisibility(View.VISIBLE);
                     }
-                    resetWatchList(moviedata);
+
+                resetWatchList(moviedata);
             }
         });
 

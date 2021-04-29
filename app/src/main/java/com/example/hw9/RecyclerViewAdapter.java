@@ -33,6 +33,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private ArrayList<String> images = new ArrayList<>();
     private ArrayList<String> id = new ArrayList<>();
     private ArrayList<String> media_type = new ArrayList<>();
+    private ArrayList<String> title = new ArrayList<>();
     private Context context;
     Toast toast;
 
@@ -42,6 +43,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             images.add(data.get(i).getImgUrl());
             id.add(data.get(i).getId());
             media_type.add(data.get(i).getMedia_type());
+            title.add(data.get(i).getTitle());
         }
         this.context = context;
     }
@@ -163,7 +165,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                 Boolean flag = true;
                                 String key = "watchlist";
                                 //WatchList: "id,media,url$id2,media2,url2$"
-                                String value = id.get(position) + "," + media_type.get(position) + "," + images.get(position);
+                                String value = id.get(position) + "," + media_type.get(position) + "," + images.get(position) + "," + title.get(position);
                                 String main_arr_str = pref.getString(key,null);
                                 if(main_arr_str != null){
                                     String[] arr = main_arr_str.split("#");
@@ -172,22 +174,26 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                                         if (temp[0].equals(id.get(position)) && temp[1].equals(media_type.get(position))) {
                                             //removing the list item
                                             arr = ArrayUtils.remove(arr, j);
+                                            Toast.makeText(view.getContext(),title.get(position) + " was removed from the watchlist",Toast.LENGTH_LONG).show();
                                             main_arr_str = String.join("#", arr);
-                                            main_arr_str += "#";
+                                            if(main_arr_str.length() != 0)
+                                                main_arr_str += "#";
+                                            //check this!
                                             flag = false;
                                         }
                                     }
                                     if(flag){
                                         main_arr_str = main_arr_str + value + "#";
+                                        Toast.makeText(view.getContext(),title.get(position) + " was added to the watchlist",Toast.LENGTH_LONG).show();
                                     }
                                 }
                                 if(main_arr_str == null){
                                     main_arr_str = value + "#";
+                                    Toast.makeText(view.getContext(),title.get(position) + " was added to the watchlist",Toast.LENGTH_LONG).show();
                                 }
                                 System.out.println("After: " + main_arr_str);
                                 editor.putString(key,main_arr_str);
                                 editor.commit();
-                                Toast.makeText(view.getContext(),"Added",Toast.LENGTH_LONG).show();
                                 return true;
                             default:
                                 return false;

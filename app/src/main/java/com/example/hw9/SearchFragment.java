@@ -77,11 +77,21 @@ public class SearchFragment extends Fragment {
 
 
     private void displaySearch(ArrayList searchList){
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
+        TextView noResult = rootView.findViewById(R.id.noresultsSearch);
         RecyclerView recyclerView = rootView.findViewById(R.id.searchRecycle);
-        recyclerView.setLayoutManager(layoutManager);
-        SearchAdapter adapter1 = new SearchAdapter(getContext(),searchList);
-        recyclerView.setAdapter(adapter1);
+        if(searchList.size() == 0){
+            noResult.setVisibility(View.VISIBLE);
+            recyclerView.setVisibility(View.GONE);
+        }
+        else{
+            noResult.setVisibility(View.GONE);
+            recyclerView.setVisibility(View.VISIBLE);
+            LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
+            recyclerView.setLayoutManager(layoutManager);
+            SearchAdapter adapter1 = new SearchAdapter(getContext(),searchList);
+            recyclerView.setAdapter(adapter1);
+        }
+
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -90,7 +100,10 @@ public class SearchFragment extends Fragment {
 
         rootView =  inflater.inflate(R.layout.fragment_search, container, false);
 
+
+
         SearchView searchView = rootView.findViewById(R.id.search_view);
+
 
 
 
@@ -108,7 +121,7 @@ public class SearchFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String input) {
 
-                String url = "http://10.0.2.2:8080/getSearchResults?inp="+input;
+                String url = "https://hw9-dot-sample-node-310011.wl.r.appspot.com/getSearchResults?inp="+input;
                 RequestQueue queue = Volley.newRequestQueue(getActivity());
 
                 ArrayList<SearchData> searchDataList = new ArrayList<>();

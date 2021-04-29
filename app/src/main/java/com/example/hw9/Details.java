@@ -72,7 +72,7 @@ public class Details extends AppCompatActivity {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void checkWatchList(SharedPreferences pref, String id, String media_type, String profile_path){
+    private void checkWatchList(SharedPreferences pref, String id, String media_type, String profile_path, String title){
         SharedPreferences.Editor editor = pref.edit();
         ImageView watchlistBtn = findViewById(R.id.watchlistBtn);
         String key = "watchlist";
@@ -100,7 +100,7 @@ public class Details extends AppCompatActivity {
             public void onClick(View v) {
                 Boolean flag = true;
                 String key = "watchlist";
-                String value = id + "," + media_type+ "," + profile_path;
+                String value = id + "," + media_type+ "," + profile_path + "," + title;
                 String main_arr_str = pref.getString(key,null);
                 System.out.println("Before: " + main_arr_str);
                 if(main_arr_str != null && main_arr_str.length() != 0){
@@ -110,20 +110,23 @@ public class Details extends AppCompatActivity {
                         if (temp[0].equals(id) && temp[1].equals(media_type)) {
                             //removing the list item
                             arr = ArrayUtils.remove(arr, j);
+                            Toast.makeText(v.getContext(), title +" was removed from the watchlist",Toast.LENGTH_LONG).show();
                             main_arr_str = String.join("#", arr);
-                            main_arr_str += "#";
-                            System.out.println("Delimited"+ main_arr_str);
+                            if(main_arr_str.length() != 0)
+                                main_arr_str += "#";
                             flag = false;
                             watchlistBtn.setImageResource(R.drawable.ic_baseline_add_circle_outline_24);
                         }
                     }
                     if(flag){
                         main_arr_str = main_arr_str + value + "#";
+                        Toast.makeText(v.getContext(), title +" was added to the watchlist",Toast.LENGTH_LONG).show();
                         watchlistBtn.setImageResource(R.drawable.ic_baseline_remove_circle_outline_24);
                     }
                 }
                 else{
                     main_arr_str = value + "#";
+                    Toast.makeText(v.getContext(), title +" was added to the watchlist",Toast.LENGTH_LONG).show();
                     watchlistBtn.setImageResource(R.drawable.ic_baseline_remove_circle_outline_24);
                 }
                 editor.putString(key,main_arr_str);
@@ -174,7 +177,7 @@ public class Details extends AppCompatActivity {
 
         RequestQueue queue = Volley.newRequestQueue(this);
 
-        String url = "http://10.0.2.2:8080/getDetails?id="+id+"&media_type="+media_type;
+        String url = "https://hw9-dot-sample-node-310011.wl.r.appspot.com/getDetails?id="+id+"&media_type="+media_type;
 
         System.out.println(url);
 
@@ -238,7 +241,7 @@ public class Details extends AppCompatActivity {
 
                             //Calling WatchList Check
 
-                            checkWatchList(pref,id,media_type,profile_path);
+                            checkWatchList(pref,id,media_type,profile_path,title);
 
                             //Setting Cast
                             for(int i = 0 ; i < cast_arr.length() ; i++){
@@ -248,6 +251,15 @@ public class Details extends AppCompatActivity {
                                 castList.add(new Cast(castURL,castName));
                             }
                             simpleList = (GridView) findViewById(R.id.simpleGridView);
+                            TextView castHeading = findViewById(R.id.castHeading);
+                            if(castList.size() == 0){
+                                castHeading.setVisibility(View.GONE);
+                                simpleList.getLayoutParams().height = 0;
+                            }
+                            else if(castList.size() <= 3){
+                                simpleList.getLayoutParams().height = 600;
+                            }
+
                             CastAdapter myAdapter=new CastAdapter(getApplicationContext(),R.layout.cast_cards,castList);
                             simpleList.setAdapter(myAdapter);
 
@@ -258,8 +270,14 @@ public class Details extends AppCompatActivity {
                                 String rating = revDet.getString("rating");
                                 String content = revDet.getString("content");
                                 reviewList.add(new Review(reviewBy,rating,content));
-                                System.out.println(content);
                             }
+
+
+                            TextView noreviews = findViewById(R.id.reviewHeading);
+                            if(reviewList.size() == 0){
+                                noreviews.setVisibility(View.GONE);
+                            }
+
 
                             reviewView = (RecyclerView) findViewById(R.id.reviewRecycle);
                             ReviewAdapter rAdapter = new ReviewAdapter(getApplicationContext(),reviewList);
@@ -274,7 +292,13 @@ public class Details extends AppCompatActivity {
                                 JSONObject movie = recommended_arr.getJSONObject(i);
                                 String url = movie.getString("poster_path");
                                 String id = movie.getString("id");
-                                recommendedList.add(new MovieData(url,id,media_type));
+                                String recTitle = movie.getString("title");
+                                recommendedList.add(new MovieData(url,id,media_type,recTitle));
+                            }
+
+                            if(recommendedList.size() == 0){
+                                TextView recTextHeader = findViewById(R.id.recommdHeading);
+                                recTextHeader.setVisibility(View.GONE);
                             }
 
                             callRecommeded(recommendedList);

@@ -41,6 +41,9 @@
         </androidx.appcompat.widget.Toolbar>
 
 
+
+
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/searchRecycle"
             android:layout_width="match_parent"
@@ -48,7 +51,26 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar"></androidx.recyclerview.widget.RecyclerView>
 
+
+        <TextView
+            android:id="@+id/noresultsSearch"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No results found."
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+        </TextView>
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
 
 </FrameLayout>

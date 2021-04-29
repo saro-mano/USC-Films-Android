@@ -233,7 +233,7 @@
                         <GridView
                         android:id="@+id/simpleGridView"
                         android:layout_width="match_parent"
-                        android:layout_height="340dp"
+                        android:layout_height="350dp"
                         android:numColumns="3"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
@@ -255,6 +255,20 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/simpleGridView" />
+
+<!--        <TextView-->
+<!--            android:id="@+id/noreviews"-->
+<!--            android:visibility="gone"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="10dp"-->
+<!--            android:text = "NIL"-->
+<!--            android:textColor="@color/white"-->
+<!--            android:textAlignment="center"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/reviewHeading">-->
+
+<!--        </TextView>-->
 
         <LinearLayout
             android:id="@+id/recycleLinearLayout"

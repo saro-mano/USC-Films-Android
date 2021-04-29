@@ -157,7 +157,7 @@ public class HomeFragment extends Fragment {
 
         RequestQueue queue = Volley.newRequestQueue(getActivity());
 
-        String url = "http://10.0.2.2:8080/homeContent";
+        String url = "https://hw9-dot-sample-node-310011.wl.r.appspot.com/homeContent";
 
         ArrayList<SliderData> currently_playing_movies = new ArrayList<>();
         ArrayList<MovieData> top_rated_movies = new ArrayList<>();
@@ -193,13 +193,15 @@ public class HomeFragment extends Fragment {
                                 JSONObject movie = json_top_rated_mov.getJSONObject(i);
                                 String url = movie.getString("poster_path");
                                 String id = movie.getString("id");
+                                String title = movie.getString("title");
                                 String media_type = "movie";
+
 
                                 //to_rate_moviesurl.add("url")
                                 //top_id.add("id")
                                 //top_media_tyoe("movue")
 
-                                top_rated_movies.add(new MovieData(url,id,media_type));
+                                top_rated_movies.add(new MovieData(url,id,media_type,title));
                             }
                             callTopRated(top_rated_movies);
 
@@ -209,7 +211,8 @@ public class HomeFragment extends Fragment {
                                 String url = movie.getString("poster_path");
                                 String id = movie.getString("id");
                                 String media_type = "movie";
-                                popular_movies.add(new MovieData(url,id,media_type));
+                                String title = movie.getString("title");
+                                popular_movies.add(new MovieData(url,id,media_type,title));
                             }
                             callPopular(popular_movies);
 
@@ -225,7 +228,8 @@ public class HomeFragment extends Fragment {
                                 String url = movie.getString("poster_path");
                                 String id = movie.getString("id");
                                 String media_type = "tv";
-                                popular_tv.add(new MovieData(url,id,media_type));
+                                String title = movie.getString("title");
+                                popular_tv.add(new MovieData(url,id,media_type,title));
                             }
 
                             for(int i = 0; i < json_top_rated_tv.length() ; i++){
@@ -233,7 +237,8 @@ public class HomeFragment extends Fragment {
                                 String url = movie.getString("poster_path");
                                 String id = movie.getString("id");
                                 String media_type = "tv";
-                                top_rated_tv.add(new MovieData(url,id,media_type));
+                                String title = movie.getString("title");
+                                top_rated_tv.add(new MovieData(url,id,media_type,title));
                             }
 
                         } catch (JSONException e) {
