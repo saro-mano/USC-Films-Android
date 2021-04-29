@@ -97,12 +97,14 @@
             android:textColor="@color/white"
             android:textSize="30dp"
             android:textStyle="bold"
+            android:paddingLeft="5dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/dummyview4"
             app:layout_constraintVertical_bias="0.0"></TextView>
 
         <TextView
+            android:paddingLeft="5dp"
             android:id="@+id/overviewHeading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -116,6 +118,7 @@
             app:layout_constraintVertical_bias="0.0"></TextView>
 
         <com.borjabravo.readmoretextview.ReadMoreTextView
+            android:paddingLeft="5dp"
             android:id="@+id/overviewContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -128,6 +131,7 @@
             app:trimMode="trimModeLength" />
 
         <TextView
+            android:paddingLeft="5dp"
             android:id="@+id/genreHeading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -140,6 +144,7 @@
             app:layout_constraintTop_toBottomOf="@+id/overviewContent" />
 
         <TextView
+            android:paddingLeft="5dp"
             android:id="@+id/genreContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -149,6 +154,7 @@
             app:layout_constraintTop_toBottomOf="@+id/genreHeading" />
 
         <TextView
+            android:paddingLeft="5dp"
             android:id="@+id/yearHeading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -162,6 +168,7 @@
 
 
         <TextView
+            android:paddingLeft="5dp"
             android:id="@+id/yearContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -171,6 +178,7 @@
             app:layout_constraintTop_toBottomOf="@+id/yearHeading" />
 
         <ImageView
+            android:padding="3dp"
             android:id="@+id/watchlistBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -180,9 +188,8 @@
 
         </ImageView>
 
-
-
         <ImageView
+            android:padding="3dp"
             android:id="@+id/fbShareBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -193,6 +200,7 @@
         </ImageView>
 
         <ImageView
+            android:padding="3dp"
             android:id="@+id/tweetShareBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -203,6 +211,7 @@
         </ImageView>
 
         <TextView
+            android:paddingLeft="5dp"
             android:id="@+id/castHeading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -235,6 +244,7 @@
 
 
         <TextView
+            android:paddingLeft="5dp"
             android:id="@+id/reviewHeading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -268,6 +278,7 @@
         </LinearLayout>
 
         <TextView
+            android:paddingLeft="5dp"
             android:id="@+id/recommdHeading"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -292,6 +303,15 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/recommdHeading" />
+
+
+        <View
+            android:layout_height="30dp"
+            android:layout_width="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/recommendedPicks"
+            />
 
 
 
